@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+  <meta charset="UTF-8">
+  <title>गीता – आज का श्लोक</title>
+
+  <style>
+    body {
+      margin: 0;
+      background: #f9f6f1;
+      font-family: Mangal, "Noto Serif Devanagari", serif;
+    }
+    .card {
+      max-width: 520px;
+      margin: 10px auto;
+      padding: 18px;
+      background: #ffffff;
+      border-radius: 14px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+    }
+    .shloka {
+      font-size: 20px;
+      font-weight: 600;
+      text-align: center;
+      line-height: 1.6;
+      margin-bottom: 14px;
+    }
+    .meaning {
+      font-size: 16px;
+      line-height: 1.6;
+      margin-bottom: 12px;
+    }
+    .ref {
+      font-size: 13px;
+      color: #777;
+      text-align: right;
+    }
+  </style>
+</head>
+
+<body>
+
+<div class="card">
+  <div class="shloka" id="shloka">लोड हो रहा है…</div>
+  <div class="meaning" id="meaning"></div>
+  <div class="ref" id="ref"></div>
+</div>
+
+<script>
+(async function () {
+  try {
+    // Load FULL Gita from local JSON
+    const response = await fetch("./gita-hi.json");
+    const verses = await response.json();
+
+    // Stable verse of the day (IST-safe)
+    const dayNumber = Math.floor(
+      new Date().setHours(0,0,0,0) / 86400000
+    );
+
+    const verse = verses[dayNumber % verses.length];
+
+    document.getElementById("shloka").innerText = verse.shloka;
+    document.getElementById("meaning").innerText = verse.meaning;
+    document.getElementById("ref").innerText =
+      `— श्रीमद्भगवद्गीता ${verse.chapter}.${verse.verse}`;
+
+  } catch (err) {
+    document.getElementById("shloka").innerText =
+      "श्लोक लोड नहीं हो सका";
+    console.error(err);
+  }
+})();
+</script>
+
+</body>
+</html>
