@@ -1,28 +1,84 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-  <meta charset="UTF-8">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Gita Verse of the Day</title>
+
+  <style>
+    body {
+      margin: 0;
+      font-family: Georgia, serif;
+      background: #faf7f2;
+    }
+
+    .card {
+      max-width: 480px;
+      margin: auto;
+      padding: 16px;
+      border-radius: 12px;
+      background: white;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+    }
+
+    .sanskrit {
+      font-size: 18px;
+      font-weight: bold;
+      text-align: center;
+      margin-bottom: 12px;
+    }
+
+    .translation {
+      font-size: 15px;
+      color: #333;
+      margin-bottom: 10px;
+    }
+
+    .ref {
+      text-align: right;
+      font-size: 13px;
+      color: #777;
+    }
+  </style>
 </head>
+
 <body>
-  <!-- Paste the widget embed code below -->
-  <div id="gita-verse-widget"></div>
-  <script>
-  (function() {
-      var script = document.createElement('script');
-      script.src = 'https://srimadgita.com/widget/verse-of-day.js';
-      script.async = true;
-      script.onload = function() {
-          GitaWidget.init({
-              containerId: 'gita-verse-widget',
-              theme: 'gradient',
-              language: 'hindi',
-              width: '100%',
-              borderRadius: '10px'
-          });
-      };
-      document.head.appendChild(script);
-  })();
-  </script>
+  <div class="card">
+    <div class="sanskrit" id="sanskrit">Loading...</div>
+    <div class="translation" id="translation"></div>
+    <div class="ref" id="reference"></div>
+  </div>
+
+<script>
+(async function () {
+  // 700 verses total approx
+  const TOTAL_VERSES = 700;
+
+  // Same verse for the same day
+  const dayIndex = Math.floor(
+    (new Date().setHours(0,0,0,0)) / 86400000
+  ) % TOTAL_VERSES + 1;
+
+  try {
+    const res = await fetch(
+      `https://bhagavadgitaapi.in/slok/${dayIndex}`
+    );
+    const data = await res.json();
+
+    document.getElementById("sanskrit").innerText =
+      data.slok || "—";
+
+    document.getElementById("translation").innerText =
+      data.tej?.ht || data.gambir?.et || "";
+
+    document.getElementById("reference").innerText =
+      `— Bhagavad Gita ${data.chapter}.${data.verse}`;
+
+  } catch (e) {
+    document.getElementById("sanskrit").innerText =
+      "Unable to load verse";
+  }
+})();
+</script>
 </body>
 </html>
