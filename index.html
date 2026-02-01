@@ -1,84 +1,95 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>Gita Verse of the Day</title>
+  <meta charset="UTF-8">
+  <title>गीता – आज का श्लोक</title>
 
   <style>
     body {
       margin: 0;
-      font-family: Georgia, serif;
-      background: #faf7f2;
+      padding: 0;
+      background: #f9f6f1;
+      font-family: "Noto Serif Devanagari", Mangal, serif;
     }
 
     .card {
-      max-width: 480px;
-      margin: auto;
-      padding: 16px;
-      border-radius: 12px;
-      background: white;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+      max-width: 500px;
+      margin: 12px auto;
+      padding: 18px;
+      background: #ffffff;
+      border-radius: 14px;
+      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
     }
 
-    .sanskrit {
-      font-size: 18px;
-      font-weight: bold;
+    .shloka {
+      font-size: 20px;
+      font-weight: 600;
       text-align: center;
+      margin-bottom: 14px;
+      line-height: 1.6;
+    }
+
+    .meaning {
+      font-size: 16px;
+      color: #333;
+      line-height: 1.6;
       margin-bottom: 12px;
     }
 
-    .translation {
-      font-size: 15px;
-      color: #333;
-      margin-bottom: 10px;
-    }
-
     .ref {
-      text-align: right;
       font-size: 13px;
       color: #777;
+      text-align: right;
     }
   </style>
 </head>
 
 <body>
+
   <div class="card">
-    <div class="sanskrit" id="sanskrit">Loading...</div>
-    <div class="translation" id="translation"></div>
-    <div class="ref" id="reference"></div>
+    <div class="shloka" id="shloka">लोड हो रहा है…</div>
+    <div class="meaning" id="meaning"></div>
+    <div class="ref" id="ref"></div>
   </div>
 
 <script>
 (async function () {
-  // 700 verses total approx
-  const TOTAL_VERSES = 700;
-
-  // Same verse for the same day
-  const dayIndex = Math.floor(
-    (new Date().setHours(0,0,0,0)) / 86400000
-  ) % TOTAL_VERSES + 1;
-
   try {
-    const res = await fetch(
-      `https://bhagavadgitaapi.in/slok/${dayIndex}`
+    const response = await fetch(
+      "https://raw.githubusercontent.com/gita/gita/main/data/chapters.json"
     );
-    const data = await res.json();
 
-    document.getElementById("sanskrit").innerText =
-      data.slok || "—";
+    const chapters = await response.json();
 
-    document.getElementById("translation").innerText =
-      data.tej?.ht || data.gambir?.et || "";
+    // Collect all verses
+    const verses = [];
+    chapters.forEach(chapter => {
+      chapter.verses.forEach(v => {
+        verses.push({
+          shloka: v.text,
+          meaning: v.translation_hi || v.translation,
+          ref: `श्रीमद्भगवद्गीता ${chapter.chapter}.${v.verse}`
+        });
+      });
+    });
 
-    document.getElementById("reference").innerText =
-      `— Bhagavad Gita ${data.chapter}.${data.verse}`;
+    // Verse of the day (stable)
+    const dayIndex =
+      Math.floor(new Date().setHours(0,0,0,0) / 86400000);
 
-  } catch (e) {
-    document.getElementById("sanskrit").innerText =
-      "Unable to load verse";
+    const verse = verses[dayIndex % verses.length];
+
+    document.getElementById("shloka").innerText = verse.shloka;
+    document.getElementById("meaning").innerText = verse.meaning;
+    document.getElementById("ref").innerText = "— " + verse.ref;
+
+  } catch (error) {
+    document.getElementById("shloka").innerText =
+      "श्लोक लोड नहीं हो सका";
+    console.error(error);
   }
 })();
 </script>
+
 </body>
 </html>
