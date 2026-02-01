@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Generate gita-hi.json</title>
+</head>
+<body>
+<script>
+(async function(){
+  const res = await fetch("dataset_hindi.json");
+  const raw = await res.json();
+
+  const output = [];
+
+  for(const [ch_str, verses] of Object.entries(raw.verses)){
+    for(const [v_str, v_data] of Object.entries(verses)){
+      output.push({
+        chapter: parseInt(ch_str),
+        verse: parseInt(v_str),
+        shloka: v_data.text.trim(),
+        meaning: (v_data.verse_meaning_hindi || "").trim()
+      });
+    }
+  }
+
+  console.log(JSON.stringify(output, null, 2));
+})();
+</script>
+</body>
+</html>
