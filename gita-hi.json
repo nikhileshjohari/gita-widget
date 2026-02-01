@@ -1,77 +1,38 @@
-<!DOCTYPE html>
-<html lang="hi">
-<head>
-  <meta charset="UTF-8">
-  <title>गीता – आज का श्लोक</title>
-
-  <style>
-    body {
-      margin: 0;
-      background: #f9f6f1;
-      font-family: Mangal, "Noto Serif Devanagari", serif;
-    }
-    .card {
-      max-width: 520px;
-      margin: 10px auto;
-      padding: 18px;
-      background: #ffffff;
-      border-radius: 14px;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
-    }
-    .shloka {
-      font-size: 20px;
-      font-weight: 600;
-      text-align: center;
-      line-height: 1.6;
-      margin-bottom: 14px;
-    }
-    .meaning {
-      font-size: 16px;
-      line-height: 1.6;
-      margin-bottom: 12px;
-    }
-    .ref {
-      font-size: 13px;
-      color: #777;
-      text-align: right;
-    }
-  </style>
-</head>
-
-<body>
-
-<div class="card">
-  <div class="shloka" id="shloka">लोड हो रहा है…</div>
-  <div class="meaning" id="meaning"></div>
-  <div class="ref" id="ref"></div>
-</div>
-
-<script>
-(async function () {
-  try {
-    // Load FULL Gita from local JSON
-    const response = await fetch("./gita-hi.json");
-    const verses = await response.json();
-
-    // Stable verse of the day (IST-safe)
-    const dayNumber = Math.floor(
-      new Date().setHours(0,0,0,0) / 86400000
-    );
-
-    const verse = verses[dayNumber % verses.length];
-
-    document.getElementById("shloka").innerText = verse.shloka;
-    document.getElementById("meaning").innerText = verse.meaning;
-    document.getElementById("ref").innerText =
-      `— श्रीमद्भगवद्गीता ${verse.chapter}.${verse.verse}`;
-
-  } catch (err) {
-    document.getElementById("shloka").innerText =
-      "श्लोक लोड नहीं हो सका";
-    console.error(err);
+[
+  {
+    "chapter": 1,
+    "verse": 1,
+    "shloka": "धृतराष्ट्र उवाच। धर्मक्षेत्रे कुरुक्षेत्रे समवेता युयुत्सवः। मामकाः पाण्डवाश्चैव किमकुर्वत संजय॥",
+    "meaning": "धृतराष्ट्र बोले— हे संजय! धर्मभूमि कुरुक्षेत्र में युद्ध की इच्छा से एकत्रित हुए मेरे और पाण्डु के पुत्रों ने क्या किया?"
+  },
+  {
+    "chapter": 2,
+    "verse": 47,
+    "shloka": "कर्मण्येवाधिकारस्ते मा फलेषु कदाचन। मा कर्मफलहेतुर्भूर्मा ते सङ्गोऽस्त्वकर्मणि॥",
+    "meaning": "तुम्हारा अधिकार केवल कर्म करने में है, उसके फलों में कभी नहीं। इसलिए कर्मफल का कारण मत बनो और अकर्म में आसक्त मत हो।"
+  },
+  {
+    "chapter": 2,
+    "verse": 48,
+    "shloka": "योगस्थः कुरु कर्माणि सङ्गं त्यक्त्वा धनञ्जय। सिद्ध्यसिद्ध्योः समो भूत्वा समत्वं योग उच्यते॥",
+    "meaning": "हे अर्जुन! आसक्ति को त्यागकर समभाव से कर्म करो। सफलता और असफलता में समत्व रखना ही योग कहलाता है।"
+  },
+  {
+    "chapter": 4,
+    "verse": 7,
+    "shloka": "यदा यदा हि धर्मस्य ग्लानिर्भवति भारत। अभ्युत्थानमधर्मस्य तदात्मानं सृजाम्यहम्॥",
+    "meaning": "हे भारत! जब-जब धर्म की हानि और अधर्म की वृद्धि होती है, तब-तब मैं स्वयं प्रकट होता हूँ।"
+  },
+  {
+    "chapter": 6,
+    "verse": 5,
+    "shloka": "उद्धरेदात्मनाऽत्मानं नात्मानमवसादयेत्। आत्मैव ह्यात्मनो बन्धुरात्मैव रिपुरात्मनः॥",
+    "meaning": "मनुष्य को चाहिए कि वह स्वयं अपना उद्धार करे, स्वयं को गिराए नहीं। आत्मा ही आत्मा का मित्र है और आत्मा ही आत्मा का शत्रु है।"
+  },
+  {
+    "chapter": 18,
+    "verse": 66,
+    "shloka": "सर्वधर्मान्परित्यज्य मामेकं शरणं व्रज। अहं त्वां सर्वपापेभ्यो मोक्षयिष्यामि मा शुचः॥",
+    "meaning": "सभी धर्मों को त्यागकर मेरी शरण में आओ। मैं तुम्हें सभी पापों से मुक्त कर दूँगा, शोक मत करो।"
   }
-})();
-</script>
-
-</body>
-</html>
+]
