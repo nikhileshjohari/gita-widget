@@ -1,8 +1,28 @@
 <!DOCTYPE html>
-<html style="margin:0;padding:20px;height:100vh;background:#f8f4f0;">
-<body style="margin:0;height:100%;overflow:hidden;">
-<div id="gita-verse-widget" style="width:100%;height:100%;"></div>
-<script src="https://srimadgita.com/widget/verse-of-day.js"></script>
-<script>GitaWidget.init({containerId:'gita-verse-widget',theme:'saffron'});</script>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title>Gita Verse of the Day</title>
+</head>
+<body>
+  <!-- Paste the widget embed code below -->
+  <div id="gita-verse-widget"></div>
+  <script>
+  (function() {
+      var script = document.createElement('script');
+      script.src = 'https://srimadgita.com/widget/verse-of-day.js';
+      script.async = true;
+      script.onload = function() {
+          GitaWidget.init({
+              containerId: 'gita-verse-widget',
+              theme: 'gradient',
+              language: 'hindi',
+              width: '100%',
+              borderRadius: '10px'
+          });
+      };
+      document.head.appendChild(script);
+  })();
+  </script>
 </body>
 </html>
