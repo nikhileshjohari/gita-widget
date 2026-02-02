@@ -2,8 +2,7 @@
 <html lang="hi">
 <head>
   <meta charset="UTF-8">
-  <title>गीता – आज का श्लोक (हिंदी अर्थ)</title>
-
+  <title>गीता – आज का श्लोक</title>
   <style>
     body {
       margin: 0;
@@ -12,53 +11,58 @@
     }
     .card {
       max-width: 520px;
-      margin: 10px auto;
-      padding: 18px;
+      margin: 20px auto;
+      padding: 20px 25px;
       background: #ffffff;
-      border-radius: 14px;
-      box-shadow: 0 4px 14px rgba(0,0,0,0.12);
+      border-radius: 15px;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+      text-align: center;
+    }
+    .shloka {
+      font-size: 20px;
+      font-weight: 600;
+      line-height: 1.6;
+      margin-bottom: 15px;
     }
     .meaning {
-      font-size: 18px;
+      font-size: 16px;
       line-height: 1.6;
-      text-align: center;
-      font-weight: 500;
+      margin-bottom: 12px;
     }
     .ref {
       font-size: 13px;
       color: #777;
       text-align: right;
-      margin-top: 12px;
     }
   </style>
 </head>
-
 <body>
-  <div class="card">
-    <div class="meaning" id="meaning">लोड हो रहा है…</div>
-    <div class="ref" id="ref"></div>
-  </div>
 
-  <script>
-  (async function () {
-    try {
-      const response = await fetch("gita-hi.json");
-      const verses = await response.json();
+<div class="card">
+  <div class="shloka" id="shloka">लोड हो रहा है…</div>
+  <div class="meaning" id="meaning"></div>
+  <div class="ref" id="ref"></div>
+</div>
 
-      // Stable verse of the day
-      const day = Math.floor(new Date().setHours(0,0,0,0) / 86400000);
-      const verse = verses[day % verses.length];
+<script>
+(async function () {
+  try {
+    const response = await fetch("gita-hi.json");
+    const verses = await response.json();
 
-      // Display only meaning
-      document.getElementById("meaning").innerText = verse.meaning || "अनुवाद उपलब्ध नहीं है";
-      document.getElementById("ref").innerText =
-        `— अध्याय ${verse.chapter}, श्लोक ${verse.verse}`;
+    // Stable verse of the day
+    const day = Math.floor(new Date().setHours(0,0,0,0) / 86400000);
+    const verse = verses[day % verses.length];
 
-    } catch (e) {
-      document.getElementById("meaning").innerText = "श्लोक लोड नहीं हो सका";
-      console.error(e);
-    }
-  })();
-  </script>
+    document.getElementById("shloka").innerText = verse.shloka || "";
+    document.getElementById("meaning").innerText = verse.meaning || "अनुवाद उपलब्ध नहीं है";
+    document.getElementById("ref").innerText = `— अध्याय ${verse.chapter}, श्लोक ${verse.verse}`;
+  } catch (e) {
+    document.getElementById("shloka").innerText = "श्लोक लोड नहीं हो सका";
+    console.error(e);
+  }
+})();
+</script>
+
 </body>
 </html>
