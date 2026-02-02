@@ -2,7 +2,7 @@
 <html lang="hi">
 <head>
   <meta charset="UTF-8">
-  <title>गीता – आज का श्लोक</title>
+  <title>गीता – आज का श्लोक (हिंदी अर्थ)</title>
 
   <style>
     body {
@@ -18,30 +18,24 @@
       border-radius: 14px;
       box-shadow: 0 4px 14px rgba(0,0,0,0.12);
     }
-    .shloka {
-      font-size: 20px;
-      font-weight: 600;
-      text-align: center;
-      line-height: 1.6;
-      margin-bottom: 14px;
-    }
     .meaning {
-      font-size: 16px;
+      font-size: 18px;
       line-height: 1.6;
-      margin-bottom: 12px;
+      text-align: center;
+      font-weight: 500;
     }
     .ref {
       font-size: 13px;
       color: #777;
       text-align: right;
+      margin-top: 12px;
     }
   </style>
 </head>
 
 <body>
   <div class="card">
-    <div class="shloka" id="shloka">लोड हो रहा है…</div>
-    <div class="meaning" id="meaning"></div>
+    <div class="meaning" id="meaning">लोड हो रहा है…</div>
     <div class="ref" id="ref"></div>
   </div>
 
@@ -51,17 +45,17 @@
       const response = await fetch("gita-hi.json");
       const verses = await response.json();
 
-      const day = Math.floor(Date.now() / 86400000);
-
+      // Stable verse of the day
+      const day = Math.floor(new Date().setHours(0,0,0,0) / 86400000);
       const verse = verses[day % verses.length];
 
-      document.getElementById("shloka").innerText = verse.shloka;
-      document.getElementById("meaning").innerText = verse.meaning;
+      // Display only meaning
+      document.getElementById("meaning").innerText = verse.meaning || "अनुवाद उपलब्ध नहीं है";
       document.getElementById("ref").innerText =
-        `— श्रीमद्भगवद्गीता ${verse.chapter}.${verse.verse}`;
+        `— अध्याय ${verse.chapter}, श्लोक ${verse.verse}`;
+
     } catch (e) {
-      document.getElementById("shloka").innerText =
-        "श्लोक लोड नहीं हो सका";
+      document.getElementById("meaning").innerText = "श्लोक लोड नहीं हो सका";
       console.error(e);
     }
   })();
