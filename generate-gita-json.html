@@ -11,12 +11,13 @@
 <script>
 (async function () {
   try {
-    const res = await fetch("./dataset_hindi.json");
-    const data = await res.json();
+    // Load dataset
+    const response = await fetch("./dataset_hindi.json");
+    const data = await response.json();
 
     const output = [];
 
-    // Loop through all chapters in dataset
+    // Loop through all chapters
     for (const chapterKey in data.verses) {
       const chapterObj = data.verses[chapterKey];
 
@@ -24,6 +25,7 @@
       for (const verseKey in chapterObj) {
         const verseObj = chapterObj[verseKey];
 
+        // Take shloka and Hindi meaning
         const shloka = verseObj.text?.trim() || "";
         const meaning = verseObj.verse_meaning_hindi?.trim() || "";
 
