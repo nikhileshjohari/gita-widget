@@ -6,32 +6,38 @@
 </head>
 <body>
 
-<h2>Open DevTools → Console</h2>
-<p>This page will generate <b>gita-hi.json</b> in the correct format.</p>
+<h3>Open DevTools → Console</h3>
 
 <script>
 (async function () {
   try {
-    const response = await fetch("https://nikhileshjohari.github.io/gita-widget/dataset_hindi.json");
+    const response = await fetch(
+      "https://nikhileshjohari.github.io/gita-widget/dataset_hindi.json"
+    );
     const data = await response.json();
 
     const output = [];
 
-    for (const [chapter, verses] of Object.entries(data.verses)) {
-      for (const [verse, obj] of Object.entries(verses)) {
+    for (const [chapterKey, chapterObj] of Object.entries(data.chapters)) {
+
+      // Some datasets store verses inside chapterObj.verses
+      // Some store verse numbers separately
+      if (!chapterObj.verses) continue;
+
+      for (const [verseKey, verseObj] of Object.entries(chapterObj.verses)) {
+
+        if (!verseObj.text) continue;
+
         output.push({
-          chapter: Number(chapter),
-          verse: Number(verse),
-          shloka: obj.text.trim(),
-          meaning: (obj.verse_meaning_hindi || "").trim()
+          chapter: Number(chapterKey),
+          verse: Number(verseKey),
+          shloka: verseObj.text.trim(),
+          meaning: (verseObj.verse_meaning_hindi || "").trim()
         });
       }
     }
 
-    console.log(
-      JSON.stringify(output, null, 2)
-    );
-
+    console.log(JSON.stringify(output, null, 2));
     console.log("✅ TOTAL VERSES:", output.length);
 
   } catch (err) {
