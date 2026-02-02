@@ -26,12 +26,12 @@
         verse: Number(v.verse),
         shloka: v.text.trim(),
         meaning: (
-  v.verse_meaning_hindi ||
-  v.verse_meaning ||
-  v.meaning?.hindi ||
-  v.translations?.hindi ||
-  ""
-).trim()
+        v.verse_meaning_hindi ||
+        v.verse_meaning ||
+        v.meaning?.hindi ||
+        v.translations?.hindi ||
+        ""
+      ).trim()
       });
     }
 
