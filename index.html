@@ -1,119 +1,101 @@
 <!DOCTYPE html>
 <html lang="hi">
 <head>
-  <meta charset="UTF-8" />
-  <title>श्रीमद्भगवद्गीता – आज का श्लोक</title>
-
+  <meta charset="UTF-8">
+  <title>गीता – आज का श्लोक</title>
   <style>
-    html, body {
-      height: 100%;
+    body {
       margin: 0;
-      font-family: "Mangal", "Noto Serif Devanagari", serif;
-      background: linear-gradient(
-        135deg,
-        #fdecef 0%,
-        #f8e6eb 35%,
-        #ffffff 100%
-      );
+      padding: 0;
       display: flex;
-      align-items: center;
       justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: #f4f4f4;
+      font-family: "Noto Serif Devanagari", Mangal, serif;
     }
 
-    .card {
+    .widget-card {
       width: 100%;
       max-width: 520px;
-      background: #ffffff;
-      border-radius: 18px;
-      padding: 26px 24px 22px;
-      box-shadow: 0 10px 28px rgba(0,0,0,0.12);
+      padding: 28px 30px;
+      background: radial-gradient(
+        circle at top left,
+        #ffe0eb 0%,
+        #ffd6e6 30%,
+        #fff4f9 60%,
+        #ffffff 100%
+      );
+      border-radius: 22px;
+      box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
+      text-align: center;
+      color: #222;
     }
 
-    .shloka {
-      font-size: 20px;
+    .verse {
+      font-size: 22px;
       font-weight: 600;
-      text-align: center;
       line-height: 1.7;
       margin-bottom: 18px;
-      color: #2a2a2a;
-      white-space: pre-line;
     }
 
-    .meaning {
-      font-size: 16px;
-      line-height: 1.65;
-      color: #444;
+    .translation {
+      font-size: 18px;
+      line-height: 1.6;
       margin-bottom: 14px;
-      text-align: left;
+      color: #333;
     }
 
-    .ref {
-      font-size: 13px;
-      color: #777;
-      text-align: right;
+    .reference {
+      font-size: 14px;
+      color: #555;
+      font-weight: 500;
+      margin-bottom: 10px;
+    }
+
+    .powered {
+      font-size: 12px;
+      color: #888;
+    }
+
+    @media(max-width: 480px){
+      .widget-card { padding: 20px; }
+      .verse { font-size: 20px; }
+      .translation { font-size: 16px; }
     }
   </style>
 </head>
-
 <body>
-  <div class="card">
-    <div class="shloka" id="shloka">लोड हो रहा है…</div>
-    <div class="meaning" id="meaning"></div>
-    <div class="ref" id="ref"></div>
-  </div>
 
-  <script>
-    (async function () {
-      try {
-        const response = await fetch("gita-hi.json");
-        const allVerses = await response.json();
+<div class="widget-card">
+  <div id="verse" class="verse">लोड हो रहा है…</div>
+  <div id="translation" class="translation"></div>
+  <div id="ref" class="reference"></div>
+  <div class="powered">Powered by My Gita Widget</div>
+</div>
 
-        const rejectedStarts = [
-          "संजय बोले",
-          "धृतराष्ट्र बोले",
-          "अर्जुन बोले"
-        ];
+<script>
+(async function () {
+  try {
+    const response = await fetch("gita-hi.json");
+    const verses = await response.json();
 
-        const krishnaVerses = allVerses.filter(v => {
-          if (v.chapter < 2) return false;
-          if (!v.meaning) return false;
+    const day = Math.floor(new Date().setHours(0,0,0,0) / 86400000);
+    const verseObj = verses[day % verses.length];
 
-          return !rejectedStarts.some(prefix =>
-            v.meaning.trim().startsWith(prefix)
-          );
-        });
+    // Remove leading "सञ्जय उवाच |" or "धृतराष्ट्र उवाच |" etc.
+    let shlokaText = verseObj.shloka || "";
+    shlokaText = shlokaText.replace(/^(सञ्जय उवाच\s*\||धृतराष्ट्र उवाच\s*\||अर्जुन उवाच\s*\|)/, "").trim();
 
-        if (!krishnaVerses.length) {
-          throw new Error("No Krishna verses found");
-        }
+    document.getElementById("verse").innerText = shlokaText;
+    document.getElementById("translation").innerText = verseObj.meaning || "";
+    document.getElementById("ref").innerText = `— अध्याय ${verseObj.chapter}, श्लोक ${verseObj.verse}`;
+  } catch (e) {
+    document.getElementById("verse").innerText = "श्लोक लोड नहीं हो सका";
+    console.error(e);
+  }
+})();
+</script>
 
-        const dayIndex = Math.floor(
-          new Date().setHours(0,0,0,0) / 86400000
-        );
-
-        const verse = krishnaVerses[
-          dayIndex % krishnaVerses.length
-        ];
-
-        document.getElementById("shloka").innerText =
-          verse.shloka
-            .replace(/^श्रीभगवानुवाच[\s|।-]*/g, "")
-            .trim();
-
-        document.getElementById("meaning").innerText =
-          verse.meaning
-            .replace(/^श्री भगवान बोले[\s–-]*/g, "")
-            .trim();
-
-        document.getElementById("ref").innerText =
-          `— अध्याय ${verse.chapter}, श्लोक ${verse.verse}`;
-
-      } catch (e) {
-        document.getElementById("shloka").innerText =
-          "श्लोक लोड नहीं हो सका";
-        console.error(e);
-      }
-    })();
-  </script>
 </body>
 </html>
