@@ -51,8 +51,7 @@
       const response = await fetch("gita-hi.json");
       const verses = await response.json();
 
-      const day =
-        Math.floor(new Date().setHours(0,0,0,0) / 86400000);
+      const day = Math.floor(Date.now() / 86400000);
 
       const verse = verses[day % verses.length];
 
