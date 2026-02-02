@@ -19,16 +19,29 @@
       width: 100%;
       max-width: 500px;
       padding: 25px 30px;
-      /* Pink-white gradient similar to official widget */
-      background: linear-gradient(135deg, #ffe6f0, #ffffff);
-      border-radius: 20px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
+      /* Official pink-white pastel look */
+      background: #fff;
+      border-radius: 18px;
+      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
       text-align: center;
-      transition: all 0.3s ease;
+      position: relative;
+      overflow: hidden;
     }
 
-    .widget-card:hover {
-      box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+    /* Pink pastel overlay using pseudo-element */
+    .widget-card::before {
+      content: "";
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: radial-gradient(circle at top left, #ffe6f0, transparent 70%);
+      opacity: 0.5;
+      border-radius: 18px;
+      z-index: 0;
+    }
+
+    .verse, .translation, .reference, .powered {
+      position: relative; /* Bring above overlay */
+      z-index: 1;
     }
 
     .verse {
@@ -62,12 +75,8 @@
       .widget-card {
         padding: 20px;
       }
-      .verse {
-        font-size: 20px;
-      }
-      .translation {
-        font-size: 16px;
-      }
+      .verse { font-size: 20px; }
+      .translation { font-size: 16px; }
     }
   </style>
 </head>
@@ -86,7 +95,6 @@
     const response = await fetch("gita-hi.json");
     const verses = await response.json();
 
-    // Daily verse
     const day = Math.floor(new Date().setHours(0,0,0,0) / 86400000);
     const verse = verses[day % verses.length];
 
