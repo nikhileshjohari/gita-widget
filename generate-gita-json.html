@@ -6,65 +6,44 @@
 </head>
 <body>
 
-<h2>Generating gita-hi.json…</h2>
-<p>Open DevTools → Console</p>
+<h3>Open DevTools → Console</h3>
 
 <script>
 (async function () {
   try {
-    // LOAD SOURCE DATASET
     const res = await fetch("./dataset_hindi.json");
     const data = await res.json();
 
     const output = [];
-    let count = 0;
 
-    // ITERATE CHAPTERS
-    for (const chapterKey in data.chapters) {
-      const chapter = data.chapters[chapterKey];
-      const chapterNum = parseInt(chapterKey, 10);
+    // Loop through all chapters in dataset
+    for (const chapterKey in data.verses) {
+      const chapterObj = data.verses[chapterKey];
 
-      // EACH VERSE NUMBER
-      for (const verseNum of chapter.verse_numbers) {
-        const verseData =
-          data.verses?.[chapterKey]?.[verseNum] ||
-          data.verse_data?.[chapterKey]?.[verseNum] ||
-          {};
+      // Loop through all verses in this chapter
+      for (const verseKey in chapterObj) {
+        const verseObj = chapterObj[verseKey];
 
-        const shloka =
-          verseData.text ||
-          verseData.shloka ||
-          "";
+        const shloka = verseObj.text?.trim() || "";
+        const meaning = verseObj.verse_meaning_hindi?.trim() || "";
 
-        const meaning =
-          verseData.verse_meaning_hindi ||
-          verseData.verse_meaning ||
-          verseData.meaning?.hindi ||
-          verseData.translations?.hindi ||
-          "";
-
-        if (shloka.trim()) {
+        if (shloka) {
           output.push({
-            chapter: chapterNum,
-            verse: verseNum,
-            shloka: shloka.trim(),
-            meaning: meaning.trim()
+            chapter: Number(chapterKey),
+            verse: Number(verseKey),
+            shloka: shloka,
+            meaning: meaning
           });
-          count++;
         }
       }
     }
 
-    console.log("TOTAL VERSES:", count);
-    console.log(
-      JSON.stringify(output, null, 2)
-    );
+    console.log("✅ TOTAL VERSES:", output.length);
+    console.log(JSON.stringify(output, null, 2));
+    document.body.innerHTML += "<h3>Check Console for output</h3>";
 
-    document.body.innerHTML +=
-      "<h3>Done. Check Console.</h3>";
-
-  } catch (e) {
-    console.error("Generation failed:", e);
+  } catch (err) {
+    console.error("❌ ERROR:", err);
   }
 })();
 </script>
