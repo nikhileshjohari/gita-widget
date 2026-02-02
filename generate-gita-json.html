@@ -5,13 +5,11 @@
   <title>Generate gita-hi.json</title>
 </head>
 <body>
-
 <h3>Open DevTools → Console</h3>
 
 <script>
-(async function () {
+(async function() {
   try {
-    // Load dataset
     const response = await fetch("./dataset_hindi.json");
     const data = await response.json();
 
@@ -21,13 +19,12 @@
     for (const chapterKey in data.verses) {
       const chapterObj = data.verses[chapterKey];
 
-      // Loop through all verses in this chapter
+      // Loop through all verses in chapter
       for (const verseKey in chapterObj) {
         const verseObj = chapterObj[verseKey];
 
-        // Take shloka and Hindi meaning
-        const shloka = verseObj.text?.trim() || "";
-        const meaning = verseObj.verse_meaning_hindi?.trim() || "";
+        const shloka = (verseObj.text || "").trim();
+        const meaning = (verseObj.meaning || "").trim();
 
         if (shloka) {
           output.push({
@@ -42,7 +39,7 @@
 
     console.log("✅ TOTAL VERSES:", output.length);
     console.log(JSON.stringify(output, null, 2));
-    document.body.innerHTML += "<h3>Check Console for output</h3>";
+    document.body.innerHTML += "<h3>Check Console for JSON output</h3>";
 
   } catch (err) {
     console.error("❌ ERROR:", err);
