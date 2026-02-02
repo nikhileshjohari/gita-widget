@@ -19,29 +19,35 @@
       width: 100%;
       max-width: 500px;
       padding: 25px 30px;
-      /* Official pink-white pastel look */
       background: #fff;
       border-radius: 18px;
-      box-shadow: 0 8px 25px rgba(0,0,0,0.1);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
       text-align: center;
       position: relative;
       overflow: hidden;
+      transition: all 0.3s ease;
     }
 
-    /* Pink pastel overlay using pseudo-element */
+    .widget-card:hover {
+      box-shadow: 0 12px 30px rgba(0,0,0,0.25);
+    }
+
+    /* Pink-white gradient overlay like official widget */
     .widget-card::before {
       content: "";
       position: absolute;
-      top: 0; left: 0; right: 0; bottom: 0;
-      background: radial-gradient(circle at top left, #ffe6f0, transparent 70%);
-      opacity: 0.5;
-      border-radius: 18px;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: radial-gradient(circle at top left, #ffe6f0, #fff 70%);
+      opacity: 0.35;
       z-index: 0;
     }
 
     .verse, .translation, .reference, .powered {
-      position: relative; /* Bring above overlay */
-      z-index: 1;
+      position: relative;
+      z-index: 1; /* place text above overlay */
     }
 
     .verse {
@@ -95,9 +101,11 @@
     const response = await fetch("gita-hi.json");
     const verses = await response.json();
 
+    // daily verse calculation
     const day = Math.floor(new Date().setHours(0,0,0,0) / 86400000);
     const verse = verses[day % verses.length];
 
+    // fill text
     document.getElementById("verse").innerText = verse.shloka || "";
     document.getElementById("translation").innerText = verse.meaning || "अनुवाद उपलब्ध नहीं है";
     document.getElementById("ref").innerText = `— अध्याय ${verse.chapter}, श्लोक ${verse.verse}`;
