@@ -19,7 +19,8 @@
       width: 100%;
       max-width: 500px;
       padding: 25px 30px;
-      background: linear-gradient(145deg, #fff8e1, #fff3d6);
+      /* Pink-white gradient similar to official widget */
+      background: linear-gradient(135deg, #ffe6f0, #ffffff);
       border-radius: 20px;
       box-shadow: 0 8px 25px rgba(0,0,0,0.15);
       text-align: center;
@@ -85,11 +86,10 @@
     const response = await fetch("gita-hi.json");
     const verses = await response.json();
 
-    // Stable verse of the day (daily)
+    // Daily verse
     const day = Math.floor(new Date().setHours(0,0,0,0) / 86400000);
     const verse = verses[day % verses.length];
 
-    // Display
     document.getElementById("verse").innerText = verse.shloka || "";
     document.getElementById("translation").innerText = verse.meaning || "अनुवाद उपलब्ध नहीं है";
     document.getElementById("ref").innerText = `— अध्याय ${verse.chapter}, श्लोक ${verse.verse}`;
