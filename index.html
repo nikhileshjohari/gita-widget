@@ -10,63 +10,71 @@
       display: flex;
       justify-content: center;
       align-items: center;
+      min-height: 100vh;
       background: #f4f4f4;
       font-family: "Noto Serif Devanagari", Mangal, serif;
     }
 
-    .widget {
+    .widget-card {
       width: 100%;
-      max-width: 480px;
-      margin: 20px;
-      padding: 20px 24px;
-      background: linear-gradient(135deg, #fffaf0, #fff4e6);
+      max-width: 500px;
+      padding: 25px 30px;
+      background: linear-gradient(145deg, #fff8e1, #fff3d6);
       border-radius: 20px;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.12);
+      box-shadow: 0 8px 25px rgba(0,0,0,0.15);
       text-align: center;
+      transition: all 0.3s ease;
     }
 
-    .verse-text {
+    .widget-card:hover {
+      box-shadow: 0 12px 30px rgba(0,0,0,0.2);
+    }
+
+    .verse {
       font-size: 22px;
       font-weight: 600;
       line-height: 1.6;
-      margin-bottom: 12px;
+      margin-bottom: 15px;
       color: #222;
-    }
-
-    .transliteration {
-      font-size: 16px;
-      color: #444;
-      margin-bottom: 12px;
-      font-style: italic;
     }
 
     .translation {
       font-size: 18px;
       line-height: 1.6;
-      margin-bottom: 10px;
+      margin-bottom: 12px;
       color: #333;
     }
 
     .reference {
       font-size: 14px;
-      color: #666;
-      margin-top: 8px;
+      color: #555;
       font-weight: 500;
     }
 
     .powered {
-      margin-top: 10px;
       font-size: 12px;
       color: #888;
+      margin-top: 10px;
+    }
+
+    @media(max-width: 480px){
+      .widget-card {
+        padding: 20px;
+      }
+      .verse {
+        font-size: 20px;
+      }
+      .translation {
+        font-size: 16px;
+      }
     }
   </style>
 </head>
 <body>
 
-<div class="widget">
-  <div id="verse" class="verse-text">लोड हो रहा है…</div>
-  <div id="translit" class="transliteration"></div>
-  <div id="meaning" class="translation"></div>
+<div class="widget-card">
+  <div id="verse" class="verse">लोड हो रहा है…</div>
+  <div id="translation" class="translation"></div>
   <div id="ref" class="reference"></div>
   <div class="powered">Powered by My Gita Widget</div>
 </div>
@@ -77,22 +85,14 @@
     const response = await fetch("gita-hi.json");
     const verses = await response.json();
 
-    const day = Math.floor(Date.now() / 86400000);
-    const v = verses[day % verses.length];
+    // Stable verse of the day (daily)
+    const day = Math.floor(new Date().setHours(0,0,0,0) / 86400000);
+    const verse = verses[day % verses.length];
 
-    // Show verse
-    document.getElementById("verse").innerText = v.shloka || "";
-
-    // Optional: Rough transliteration (simple)
-    // You can replace this with a real transliteration algorithm if dataset has one
-    const translit = (v.shloka || "")
-      .replace(/ /g, " ")
-      .replace(/॥/g, "");
-    document.getElementById("translit").innerText = translit;
-
-    document.getElementById("meaning").innerText = v.meaning || "";
-    document.getElementById("ref").innerText =
-      `— श्रीमद्भगवद्गीता ${v.chapter}.${v.verse}`;
+    // Display
+    document.getElementById("verse").innerText = verse.shloka || "";
+    document.getElementById("translation").innerText = verse.meaning || "अनुवाद उपलब्ध नहीं है";
+    document.getElementById("ref").innerText = `— अध्याय ${verse.chapter}, श्लोक ${verse.verse}`;
 
   } catch (e) {
     document.getElementById("verse").innerText = "श्लोक लोड नहीं हो सका";
