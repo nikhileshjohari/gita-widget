@@ -18,23 +18,15 @@
 
     const output = [];
 
-    for (const [chapterKey, chapterObj] of Object.entries(data.chapters)) {
+    for (const verseKey of Object.keys(data.verses)) {
+      const v = data.verses[verseKey];
 
-      // Some datasets store verses inside chapterObj.verses
-      // Some store verse numbers separately
-      if (!chapterObj.verses) continue;
-
-      for (const [verseKey, verseObj] of Object.entries(chapterObj.verses)) {
-
-        if (!verseObj.text) continue;
-
-        output.push({
-          chapter: Number(chapterKey),
-          verse: Number(verseKey),
-          shloka: verseObj.text.trim(),
-          meaning: (verseObj.verse_meaning_hindi || "").trim()
-        });
-      }
+      output.push({
+        chapter: Number(v.chapter),
+        verse: Number(v.verse),
+        shloka: v.text.trim(),
+        meaning: (v.verse_meaning_hindi || "").trim()
+      });
     }
 
     console.log(JSON.stringify(output, null, 2));
