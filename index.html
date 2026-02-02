@@ -20,12 +20,12 @@
       max-width: 520px;
       padding: 28px 30px;
       background: radial-gradient(
-      circle at top left,
-      #ffe0eb 0%,
-      #ffd6e6 30%,
-      #fff4f9 60%,
-      #ffffff 100%
-    );
+        circle at top left,
+        #ffe0eb 0%,
+        #ffd6e6 30%,
+        #fff4f9 60%,
+        #ffffff 100%
+      );
       border-radius: 22px;
       box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
       text-align: center;
@@ -59,9 +59,7 @@
     }
 
     @media(max-width: 480px){
-      .widget-card {
-        padding: 20px;
-      }
+      .widget-card { padding: 20px; }
       .verse { font-size: 20px; }
       .translation { font-size: 16px; }
     }
@@ -81,12 +79,17 @@
   try {
     const response = await fetch("gita-hi.json");
     const verses = await response.json();
-    const day = Math.floor(new Date().setHours(0,0,0,0) / 86400000);
-    const verse = verses[day % verses.length];
 
-    document.getElementById("verse").innerText = verse.shloka || "";
-    document.getElementById("translation").innerText = verse.meaning || "";
-    document.getElementById("ref").innerText = `— अध्याय ${verse.chapter}, श्लोक ${verse.verse}`;
+    const day = Math.floor(new Date().setHours(0,0,0,0) / 86400000);
+    const verseObj = verses[day % verses.length];
+
+    // Remove leading "सञ्जय उवाच |" or "धृतराष्ट्र उवाच |" etc.
+    let shlokaText = verseObj.shloka || "";
+    shlokaText = shlokaText.replace(/^(सञ्जय उवाच\s*\||धृतराष्ट्र उवाच\s*\||अर्जुन उवाच\s*\|)/, "").trim();
+
+    document.getElementById("verse").innerText = shlokaText;
+    document.getElementById("translation").innerText = verseObj.meaning || "";
+    document.getElementById("ref").innerText = `— अध्याय ${verseObj.chapter}, श्लोक ${verseObj.verse}`;
   } catch (e) {
     document.getElementById("verse").innerText = "श्लोक लोड नहीं हो सका";
     console.error(e);
