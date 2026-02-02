@@ -6,42 +6,69 @@
   <style>
     body {
       margin: 0;
-      background: #f9f6f1;
-      font-family: Mangal, "Noto Serif Devanagari", serif;
+      padding: 0;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      background: #f4f4f4;
+      font-family: "Noto Serif Devanagari", Mangal, serif;
     }
-    .card {
-      max-width: 520px;
-      margin: 20px auto;
-      padding: 20px 25px;
-      background: #ffffff;
-      border-radius: 15px;
+
+    .widget {
+      width: 100%;
+      max-width: 480px;
+      margin: 20px;
+      padding: 20px 24px;
+      background: linear-gradient(135deg, #fffaf0, #fff4e6);
+      border-radius: 20px;
       box-shadow: 0 4px 20px rgba(0,0,0,0.12);
       text-align: center;
     }
-    .shloka {
-      font-size: 20px;
+
+    .verse-text {
+      font-size: 22px;
       font-weight: 600;
       line-height: 1.6;
-      margin-bottom: 15px;
-    }
-    .meaning {
-      font-size: 16px;
-      line-height: 1.6;
       margin-bottom: 12px;
+      color: #222;
     }
-    .ref {
-      font-size: 13px;
-      color: #777;
-      text-align: right;
+
+    .transliteration {
+      font-size: 16px;
+      color: #444;
+      margin-bottom: 12px;
+      font-style: italic;
+    }
+
+    .translation {
+      font-size: 18px;
+      line-height: 1.6;
+      margin-bottom: 10px;
+      color: #333;
+    }
+
+    .reference {
+      font-size: 14px;
+      color: #666;
+      margin-top: 8px;
+      font-weight: 500;
+    }
+
+    .powered {
+      margin-top: 10px;
+      font-size: 12px;
+      color: #888;
     }
   </style>
 </head>
 <body>
 
-<div class="card">
-  <div class="shloka" id="shloka">लोड हो रहा है…</div>
-  <div class="meaning" id="meaning"></div>
-  <div class="ref" id="ref"></div>
+<div class="widget">
+  <div id="verse" class="verse-text">लोड हो रहा है…</div>
+  <div id="translit" class="transliteration"></div>
+  <div id="meaning" class="translation"></div>
+  <div id="ref" class="reference"></div>
+  <div class="powered">Powered by My Gita Widget</div>
 </div>
 
 <script>
@@ -50,15 +77,25 @@
     const response = await fetch("gita-hi.json");
     const verses = await response.json();
 
-    // Stable verse of the day
-    const day = Math.floor(new Date().setHours(0,0,0,0) / 86400000);
-    const verse = verses[day % verses.length];
+    const day = Math.floor(Date.now() / 86400000);
+    const v = verses[day % verses.length];
 
-    document.getElementById("shloka").innerText = verse.shloka || "";
-    document.getElementById("meaning").innerText = verse.meaning || "अनुवाद उपलब्ध नहीं है";
-    document.getElementById("ref").innerText = `— अध्याय ${verse.chapter}, श्लोक ${verse.verse}`;
+    // Show verse
+    document.getElementById("verse").innerText = v.shloka || "";
+
+    // Optional: Rough transliteration (simple)
+    // You can replace this with a real transliteration algorithm if dataset has one
+    const translit = (v.shloka || "")
+      .replace(/ /g, " ")
+      .replace(/॥/g, "");
+    document.getElementById("translit").innerText = translit;
+
+    document.getElementById("meaning").innerText = v.meaning || "";
+    document.getElementById("ref").innerText =
+      `— श्रीमद्भगवद्गीता ${v.chapter}.${v.verse}`;
+
   } catch (e) {
-    document.getElementById("shloka").innerText = "श्लोक लोड नहीं हो सका";
+    document.getElementById("verse").innerText = "श्लोक लोड नहीं हो सका";
     console.error(e);
   }
 })();
