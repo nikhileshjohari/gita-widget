@@ -15,16 +15,14 @@
 
     const output = [];
 
-    // Loop through all chapters
     for (const chapterKey in data.verses) {
       const chapterObj = data.verses[chapterKey];
 
-      // Loop through all verses in chapter
       for (const verseKey in chapterObj) {
         const verseObj = chapterObj[verseKey];
 
-        const shloka = (verseObj.text || "").trim();
-        const meaning = (verseObj.meaning || "").trim();
+        const shloka = (verseObj.text || verseObj.shloka || "").trim();
+        const meaning = (verseObj.meaning || verseObj.verse_meaning_hindi || "").trim();
 
         if (shloka) {
           output.push({
