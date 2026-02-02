@@ -82,23 +82,18 @@
     const response = await fetch("gita-hi.json");
     const allVerses = await response.json();
 
-    // Filter only timeless Krishna teachings
+    // STRICT timeless filter: Krishna-only teachings
     const timelessVerses = allVerses.filter(v => {
       if (!v.shloka || !v.meaning) return false;
 
-      // Exclude non-teaching chapters
-      if (v.chapter < 2) return false;
+      const m = v.meaning.trim();
 
-      // Exclude conversational meanings
-      const rejectedMeanings = [
-        "सञ्जय बोले",
-        "धृतराष्ट्र बोले",
-        "अर्जुन बोले"
-      ];
-
-      if (rejectedMeanings.some(p =>
-        v.meaning.trim().startsWith(p)
-      )) return false;
+      // Exclude ALL non-Krishna speakers
+      if (
+        m.startsWith("अर्जुन") ||
+        m.startsWith("सञ्जय") ||
+        m.startsWith("धृतराष्ट्र")
+      ) return false;
 
       return true;
     });
@@ -107,7 +102,7 @@
       throw new Error("No timeless verses found");
     }
 
-    // Stable verse of the day (IST-safe)
+    // Stable verse of the day
     const day =
       Math.floor(new Date().setHours(0,0,0,0) / 86400000);
 
@@ -117,17 +112,11 @@
     // Clean shloka text
     let shlokaText = verseObj.shloka
       .replace(/^श्रीभगवानुवाच\s*[|।-]*/g, "")
-      .replace(/^सञ्जय उवाच\s*[|।-]*/g, "")
-      .replace(/^धृतराष्ट्र उवाच\s*[|।-]*/g, "")
-      .replace(/^अर्जुन उवाच\s*[|।-]*/g, "")
       .trim();
 
     // Clean meaning text
     let meaningText = verseObj.meaning
       .replace(/^श्री भगवान बोले\s*[–-]*/g, "")
-      .replace(/^सञ्जय बोले\s*[–-]*/g, "")
-      .replace(/^धृतराष्ट्र बोले\s*[–-]*/g, "")
-      .replace(/^अर्जुन बोले\s*[–-]*/g, "")
       .trim();
 
     document.getElementById("verse").innerText = shlokaText;
